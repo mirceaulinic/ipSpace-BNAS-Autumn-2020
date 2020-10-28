@@ -1,0 +1,129 @@
+version: '2.1'
+
+services:
+  vmx1:
+    image: build-your-own-image/vmx:17.2R1.13
+    privileged: true
+    hostname: vmx1
+    container_name: vmx1
+    restart: unless-stopped
+    command: --username ipspace --password ipSpaceBNAS2020
+  vmx2:
+    image: build-your-own-image/vmx:17.2R1.13
+    privileged: true
+    hostname: vmx2
+    container_name: vmx2
+    restart: unless-stopped
+    command: --username ipspace --password ipSpaceBNAS2020
+  vmx3:
+    image: build-your-own-image/vmx:17.2R1.13
+    privileged: true
+    hostname: vmx3
+    container_name: vmx3
+    restart: unless-stopped
+    command: --username ipspace --password ipSpaceBNAS2020
+  vmx4:
+    image: build-your-own-image/vmx:17.2R1.13
+    privileged: true
+    hostname: vmx4
+    container_name: vmx4
+    restart: unless-stopped
+    command: --username ipspace --password ipSpaceBNAS2020
+  eos-leaf1:
+    image: build-your-own-image/veos:4.18.1F
+    privileged: true
+    hostname: eos-leaf1
+    container_name: eos-leaf1
+    restart: unless-stopped
+    command: --username ipspace --password ipSpaceBNAS2020
+  eos-leaf2:
+    image: build-your-own-image/veos:4.18.1F
+    privileged: true
+    hostname: eos-leaf2
+    container_name: eos-leaf2
+    restart: unless-stopped
+    command: --username ipspace --password ipSpaceBNAS2020
+  eos-spine1:
+    image: build-your-own-image/veos:4.18.1F
+    privileged: true
+    hostname: eos-spine1
+    container_name: eos-spine1
+    restart: unless-stopped
+    command: --username ipspace --password ipSpaceBNAS2020
+  eos-spine2:
+    image: build-your-own-image/veos:4.18.1F
+    privileged: true
+    hostname: eos-spine2
+    container_name: eos-spine2
+    restart: unless-stopped
+    command: --username ipspace --password ipSpaceBNAS2020
+  srv1:
+    build:
+      context: ./
+    hostname: srv1
+    container_name: srv1
+    restart: unless-stopped
+  srv2:
+    build:
+      context: ./
+    hostname: srv2
+    container_name: srv2
+    restart: unless-stopped
+  srv3:
+    build:
+      context: ./
+    hostname: srv3
+    container_name: srv3
+    restart: unless-stopped
+  salt:
+    image: mirceaulinic/salt-master:2020.9.15
+    container_name: salt
+    restart: unless-stopped
+    hostname: salt
+    volumes:
+      - /srv/salt:/srv/salt
+      - /etc/salt:/etc/salt
+  salt_vmx1:
+    image: mirceaulinic/salt-proxy:2020.9.15
+    container_name: salt_vmx1
+    restart: unless-stopped
+    depends_on:
+      - salt
+      - vmx1
+    volumes:
+      - /etc/salt:/etc/salt
+    environment:
+      PROXYID: vmx1
+  salt_vmx2:
+    image: mirceaulinic/salt-proxy:2020.9.15
+    container_name: salt_vmx2
+    restart: unless-stopped
+    depends_on:
+      - salt
+      - vmx2
+    volumes:
+      - /etc/salt:/etc/salt
+    environment:
+      PROXYID: vmx2
+  salt_eos-spine1:
+    image: mirceaulinic/salt-proxy:2020.9.15
+    container_name: salt_eos-spine1
+    restart: unless-stopped
+    depends_on:
+      - salt
+      - eos-spine1
+    volumes:
+      - /etc/salt:/etc/salt
+    environment:
+      PROXYID: eos-spine1
+  salt_eos-spine2:
+    image: mirceaulinic/salt-proxy:2020.9.15
+    container_name: salt_eos-spine2
+    restart: unless-stopped
+    depends_on:
+      - salt
+      - eos-spine2
+    volumes:
+      - /etc/salt:/etc/salt
+    environment:
+      PROXYID: eos-spine2
