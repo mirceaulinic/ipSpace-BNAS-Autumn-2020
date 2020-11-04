@@ -2,6 +2,6 @@ proxy:
   proxytype: ssh
   host: {{ opts.id }}
   user: root
-  passwd: ipSpaceBNAS2020
-  ssh_options:
-    - 'StrictHostKeyChecking=no'
+  priv: /etc/salt/ssh_key
+  priv_passwd: ipSpaceBNAS2020
+  ignore_host_keys: true
